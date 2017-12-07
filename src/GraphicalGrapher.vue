@@ -13,7 +13,15 @@
 			<label><input type="checkbox" v-model="single">Single result</label>
 			<label><input type="checkbox" v-model="includeCreate">Add "Collection.createQuery"</label>
 			<label><input type="checkbox" v-model="lessUsedFields">Show less used fields</label>
-		</div>
+			<label style="flex-direction:column">
+				Indentation
+				<select v-model="indent">
+					<option value="  ">2 spaces</option>
+					<option value="    ">4 spaces</option>
+					<option value="	">tab</option>
+				</select>
+			</label>
+			</div>
 		<div v-if="currentCollection" class="columns">
 			<div>
 				<h2>Editor</h2>
@@ -48,7 +56,8 @@
 				bypassFirewall:false,
 				includeCreate:true,
 				lessUsedFields:false,
-				result:{}
+				result:{},
+				indent:'  '
 			}
 		},
 		created(){
@@ -57,8 +66,7 @@
 					throw err
 				}
 				let collections = res.collections
-				console.log(collections.users.schema.emails)
-				//make collections with no stuff grey and display last in the menu
+				//make collections with no links or schema grey and display them last in the menu
 				_.each(collections, collection => {
 					if(!_.size(collection.schema) && !_.size(collection.links) && !_.size(collection.reducers)){
 						collection.noStuff = true
@@ -68,7 +76,7 @@
 				_.each(_.pickBy(collections, coll => coll.noStuff), (val, key) => this.$set(this.collections, key, val))
 				this.namedQueries = res.namedQueries
 			})
-			this.$autoWatch(()=>{
+			this.$watch(()=>{
 				const collection = this.currentCollection
 				if(!collection){
 					return
@@ -83,7 +91,7 @@
 					checkUser:!this.bypassFirewall
 				},
 				(err, res) => this.result = res || err)
-			})
+			}, ()=>{}, {deep:true})
 		},
 		computed:{
 			query(){
@@ -93,9 +101,9 @@
 				return this.queries[this.currentCollection]
 			},
 			jsonQuery(){
-				let query = JSON.stringify(this.query, null, '  ')
+				let query = JSON.stringify(this.query, null, this.indent)
 				if(this.includeCreate){
-					query = _.capitalize(this.currentCollection) + '.createQuery(' + query + ')'
+					query = _.upperFirst(this.currentCollection) + '.createQuery(' + query + ')'
 				}
 				return query
 			},
@@ -118,7 +126,8 @@
 			user-select none
 	.collections
 		border-radius 8px
-		overflow auto
+		overflow hidden
+		flex-wrap wrap
 		div
 			cursor pointer
 			padding 10px
@@ -134,6 +143,8 @@
 				background #0a0
 				color #fff			
 	.options
+		@media (max-width 750px)
+			flex-wrap wrap
 		label
 			padding 5px
 			margin 5px
@@ -144,9 +155,11 @@
 			span
 				opacity 0.5
 				margin-left 5px
+				font-size 12px
 		input
 			height 20px
 			width 20px
+			flex-shrink 0
 	.columns
 		> div
 			flex-direction column
@@ -169,6 +182,7 @@
 		border none
 		outline none
 		resize none
+		tab-size 2
 		&.badQuery
 			color red
 </style>

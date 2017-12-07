@@ -1,8 +1,8 @@
 {
   "name": "graphical-grapher",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Graphical Grapher",
-  "main": "lib/plugin.js",
+  "main": "lib/GraphicalGrapher.js",
   "author": "Simon Herteby",
   "license": "MIT",
   "dependencies": {
