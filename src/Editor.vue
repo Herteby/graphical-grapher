@@ -62,7 +62,8 @@
 					v-if="node[key]"
 					:node="node[key]"
 					:collection="collections[link.collection]"
-					:collections="collections">
+					:collections="collections"
+					:lessUsedFields="lessUsedFields">
 				</Editor>
 			</div>
 		</template>
@@ -73,7 +74,7 @@
 	import _ from 'lodash'
 	export default {
 		name:'Editor',
-		props:['collection', 'node', 'collections', 'object', 'lessUsedFields'],
+		props:['collection', 'node', 'collections', 'object', 'lessUsedFields', 'showLessUsed'],
 		data(){
 			return {
 				errors:{}
@@ -87,10 +88,11 @@
 				return _.omit(this.collection.schema, '_id')
 			},
 			specialFields(){
-				if(this.lessUsedFields){
-					return ['$filters', '$options', '$filter', '$postFilters', '$postOptions']
+				const fields = ['$filters', '$options', '$filter', '$postFilters', '$postOptions']
+				if(this.showLessUsed){
+					return fields
 				} else {
-					return ['$filters', '$options']
+					return _.difference(fields, this.lessUsedFields)
 				}
 			}
 		},
@@ -241,13 +243,13 @@
 		span
 			opacity 0.7
 			margin-left 3px
-		textarea
-			border 1px solid #ccc
-			outline none
-			border-radius 4px
-			margin 1px
-			&:focus
-				border-color #7c7
-			&.error
-				border-color #f88
+	textarea
+		border 1px solid #ccc
+		outline none
+		border-radius 4px
+		margin 1px
+		&:focus
+			border-color #7c7
+		&.error
+			border-color #f88
 </style>

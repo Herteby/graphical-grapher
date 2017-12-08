@@ -1,7 +1,7 @@
 {
   "name": "graphical-grapher",
   "version": "1.1.1",
-  "description": "Graphical Grapher",
+  "description": "Not an actual NPM package. This file is only used to get dependencies for compiling .vue files",
   "main": "lib/GraphicalGrapher.js",
   "author": "Simon Herteby",
   "license": "MIT",

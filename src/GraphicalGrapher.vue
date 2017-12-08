@@ -13,19 +13,17 @@
 			<label><input type="checkbox" v-model="single">Single result</label>
 			<label><input type="checkbox" v-model="includeCreate">Add "Collection.createQuery"</label>
 			<label><input type="checkbox" v-model="lessUsedFields">Show less used fields</label>
-			<label style="flex-direction:column">
-				Indentation
-				<select v-model="indent">
-					<option value="  ">2 spaces</option>
-					<option value="    ">4 spaces</option>
-					<option value="	">tab</option>
-				</select>
-			</label>
 			</div>
 		<div v-if="currentCollection" class="columns">
 			<div>
 				<h2>Editor</h2>
-				<Editor :collection="collections[currentCollection]" :node="query" :collections="collections" :lessUsedFields="lessUsedFields"></Editor>
+				<Editor
+					:collection="collections[currentCollection]"
+					:node="query"
+					:collections="collections"
+					:lessUsedFields="lessUsedFields"
+					:showLessUsed="showLessUsed">
+				</Editor>
 			</div>			
 			<div>
 				<h2>Query</h2>
@@ -33,7 +31,7 @@
 			</div>
 			<div>
 				<h2>Result <span>{{result.timeElapsedMs}}ms</span></h2>
-				<div class="result">{{result.data}}</div>
+				<div class="result">{{jsonResult}}</div>
 			</div>
 		</div>
 		<h1 v-else style="color:#888">Choose a collection</h1>
@@ -45,6 +43,24 @@
 	import Editor from './Editor.vue'
 	export default {
 		components:{Editor},
+		props:{
+			indent:{
+				type:String,
+				default:'	'
+			},
+			singleResult:{
+				type:Boolean,
+				default:false
+			},
+			includeCreate:{
+				type:Boolean,
+				default:true
+			},
+			lessUsedFields:{
+				type:Array,
+				default:['$filter','$postFilters','$postOptions']
+			}
+		},
 		data(){
 			return {
 				collections:undefined,
@@ -52,12 +68,11 @@
 				currentCollection:undefined,
 				queries:{},
 				badQuery:false,
-				single:false,
+				single:this.singleResult,
 				bypassFirewall:false,
 				includeCreate:true,
-				lessUsedFields:false,
+				showLessUsed:false,
 				result:{},
-				indent:'  '
 			}
 		},
 		created(){
@@ -110,8 +125,8 @@
 			dev(){
 				return Meteor.isDevelopment
 			},
-			cleanedResult(){
-				return _.omitBy(this.result, key => key[0] == '$')
+			jsonResult(){
+				return JSON.stringify(this.result.data, null, '  ')
 			}
 		}
 	}
