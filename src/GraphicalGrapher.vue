@@ -12,7 +12,7 @@
 			<label v-if="dev"><input type="checkbox" v-model="bypassFirewall">Bypass firewall<span> (not available in production)</span></label>
 			<label><input type="checkbox" v-model="single">Single result</label>
 			<label><input type="checkbox" v-model="includeCreate">Add "Collection.createQuery"</label>
-			<label><input type="checkbox" v-model="lessUsedFields">Show less used fields</label>
+			<label><input type="checkbox" v-model="showLessUsed">Show less used fields</label>
 			</div>
 		<div v-if="currentCollection" class="columns">
 			<div>
