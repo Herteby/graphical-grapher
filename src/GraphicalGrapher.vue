@@ -30,8 +30,9 @@
 				<textarea readonly v-model="jsonQuery" :class="{query:1,badQuery}" @click="$event.target.select()"></textarea>
 			</div>
 			<div>
-				<h2>Result <span>{{result.data && result.data.length}} documents - {{result.timeElapsedMs}}ms</span></h2>
-				<div class="result">{{jsonResult}}</div>
+				<h2>Result <span v-if="result.data">{{result.data.length}} documents - {{result.timeElapsedMs}}ms</span></h2>
+				<div v-if="result.error" style="color:red">{{result.message}}</div>
+				<div v-else class="result">{{jsonResult}}</div>
 			</div>
 		</div>
 		<h1 v-else style="color:#888">Choose a collection</h1>

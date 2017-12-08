@@ -1,6 +1,6 @@
 Package.describe({
   name: 'herteby:graphical-grapher',
-  version: '1.3.2',
+  version: '1.3.3',
   summary: 'Graphical Grapher - Visualize your queries in the browser',
   git: 'https://github.com/Herteby/graphical-grapher',
   documentation: 'README.md'
