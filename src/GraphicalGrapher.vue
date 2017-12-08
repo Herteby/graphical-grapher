@@ -11,7 +11,7 @@
 		<div class="options">
 			<label v-if="dev"><input type="checkbox" v-model="bypassFirewall">Bypass firewall<span> (not available in production)</span></label>
 			<label><input type="checkbox" v-model="single">Single result</label>
-			<label><input type="checkbox" v-model="includeCreate">Add "Collection.createQuery"</label>
+			<label><input type="checkbox" v-model="includeCreate_">Add "Collection.createQuery"</label>
 			<label><input type="checkbox" v-model="showLessUsed">Show less used fields</label>
 			</div>
 		<div v-if="currentCollection" class="columns">
@@ -30,7 +30,7 @@
 				<textarea readonly v-model="jsonQuery" :class="{query:1,badQuery}" @click="$event.target.select()"></textarea>
 			</div>
 			<div>
-				<h2>Result <span>{{result.timeElapsedMs}}ms</span></h2>
+				<h2>Result <span>{{result.data && result.data.length}} documents - {{result.timeElapsedMs}}ms</span></h2>
 				<div class="result">{{jsonResult}}</div>
 			</div>
 		</div>
@@ -58,7 +58,9 @@
 			},
 			lessUsedFields:{
 				type:Array,
-				default:['$filter','$postFilters','$postOptions']
+				default(){
+					return ['$filter','$postFilters','$postOptions']
+				}
 			}
 		},
 		data(){
@@ -70,7 +72,7 @@
 				badQuery:false,
 				single:this.singleResult,
 				bypassFirewall:false,
-				includeCreate:true,
+				includeCreate_:this.includeCreate,
 				showLessUsed:false,
 				result:{},
 			}
@@ -91,22 +93,21 @@
 				_.each(_.pickBy(collections, coll => coll.noStuff), (val, key) => this.$set(this.collections, key, val))
 				this.namedQueries = res.namedQueries
 			})
-			this.$watch(()=>{
-				const collection = this.currentCollection
-				if(!collection){
-					return
-				}
-				const body = {[this.currentCollection]:_.cloneDeep(this.query)}
-				if(this.single){
-					_.set(body[this.currentCollection], '$options.limit', 1)
-				}
-				Meteor.call('grapher.live', {
-					body:body,
-					params:undefined,
-					checkUser:!this.bypassFirewall
-				},
-				(err, res) => this.result = res || err)
-			}, ()=>{}, {deep:true})
+			this.$watch(()=>[this.currentCollection, this.query, this.single, this.bypassFirewall],
+				([collection, query, single, bypass]) => {
+					if(collection){
+						const body = {[collection]:_.cloneDeep(query)}
+						if(single){
+							_.set(body[collection], '$options.limit', 1)
+						}
+						Meteor.call('grapher.live', {
+							body:body,
+							params:undefined,
+							checkUser:!this.bypassFirewall
+						},
+						(err, res) => this.result = res || err)
+					}
+				}, {deep:true})
 		},
 		computed:{
 			query(){
@@ -117,7 +118,7 @@
 			},
 			jsonQuery(){
 				let query = JSON.stringify(this.query, null, this.indent)
-				if(this.includeCreate){
+				if(this.includeCreate_){
 					query = _.upperFirst(this.currentCollection) + '.createQuery(' + query + ')'
 				}
 				return query
