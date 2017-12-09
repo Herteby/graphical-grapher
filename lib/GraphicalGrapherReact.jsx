@@ -6,7 +6,7 @@ export default class GraphicalGrapherReact extends React.Component {
 		return (<div id="GraphicalGrapher"><h1>Graphical Grapher</h1></div>)
 	}
 	componentDidMount(){
-		import('./vue.js').then(({Vue}) => {
+		import('vue').then(({default:Vue}) => {
 			this.vue = new Vue({
 				el:'#GraphicalGrapher',
 				propsData:this.props,
