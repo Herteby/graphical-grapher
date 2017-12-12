@@ -62,6 +62,10 @@
 				default(){
 					return ['$filter','$postFilters','$postOptions']
 				}
+			},
+			hideSchemalessCollections:{
+				type:Boolean,
+				default:false
 			}
 		},
 		data(){
@@ -91,7 +95,9 @@
 					}
 				})
 				this.collections = _.pickBy(collections, coll => !coll.noStuff)
-				_.each(_.pickBy(collections, coll => coll.noStuff), (val, key) => this.$set(this.collections, key, val))
+				if(!this.hideSchemalessCollections){
+					_.each(_.pickBy(collections, coll => coll.noStuff), (val, key) => this.$set(this.collections, key, val))
+				}
 				this.namedQueries = res.namedQueries
 			})
 			this.$watch(()=>[this.currentCollection, this.query, this.single, this.bypassFirewall],

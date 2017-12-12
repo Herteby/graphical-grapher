@@ -48,6 +48,11 @@ You can pass some props to configure Graphical Grapher. This works in both Vue a
 		<td>An array containing the fields which should be hidden unless "Show less used fields" is checked.</td>
 	</tr>
 	<tr>
+		<td>hideSchemalessCollections</td>
+		<td>false</td>
+		<td>If set to true, it won't show collections that lack schemas and links at all, instead of just greying them out.</td>
+	</tr>
+	<tr>
 		<td>singleResult</td>
 		<td>false</td>
 		<td>The initial state of "Single result"</td>
