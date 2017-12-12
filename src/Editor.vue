@@ -1,20 +1,20 @@
 <template>
-	<div class="editor">
+	<div class="gg_editor">
 		<!--========== SPECIAL FIELDS ==========-->
 		<template v-if="!object">
 			<div v-for="field in specialFields">
-				<div class="node special" :class="{active:node[field]}" @click="clickSpecial(field)">
-					<div><b>$</b>{{field}}</div>
+				<div class="gg_node gg_special" :class="{gg_active:node[field]}" @click="clickSpecial(field)">
+					<div><div class="gg_icon">$</div>{{field}}</div>
 				</div>
-				<textarea v-if="node[field]" :class="{error:errors[field]}" @input="setSpecial(field, $event.target.value)" :ref="field"></textarea>
+				<textarea v-if="node[field]" :class="{gg_error:errors[field]}" @input="setSpecial(field, $event.target.value)" :ref="field"></textarea>
 			</div>
 		</template>
 		<!--========== FIELDS ==========-->
 		<div v-for="field, key in fields">
-			<div class="node field" :class="{active:node[key]}" @click="clickField(field, key)" @contextmenu.prevent="node[key] == 1 ? $delete(node, key) : $set(node, key, 1)">
-				<div><b>{{icon(field)}}</b>{{key}}</div>
-				<div v-if="typeof node[key] !== 'object'" class="details">: {{contentType(field, true)}}</div>
-				<div class="hover">
+			<div class="gg_node gg_field" :class="{gg_active:node[key]}" @click="clickField(field, key)" @contextmenu.prevent="node[key] == 1 ? $delete(node, key) : $set(node, key, 1)">
+				<div><div class="gg_icon">{{icon(field)}}</div>{{key}}</div>
+				<div v-if="typeof node[key] !== 'object'" class="gg_details">: {{contentType(field, true)}}</div>
+				<div class="gg_hover">
 					<div>
 						<div>{{field.optional ? 'Optional' : 'Required'}}</div>
 						<div v-for="val, key in details(field)">{{key}}:<span>{{val}}</span></div>
@@ -32,10 +32,10 @@
 		<template v-if="!object">
 			<!--========== REDUCERS ==========-->
 			<div v-for="reducer, key in collection.reducers">
-				<div class="node reducer" :class="{active:node[key]}" @click="node[key] ? $delete(node, key) : $set(node, key, 1)">
-					<div><b>()</b>{{key}}</div>
-					<div class="details">: reducer</div>
-					<div class="hover">
+				<div class="gg_node gg_reducer" :class="{gg_active:node[key]}" @click="node[key] ? $delete(node, key) : $set(node, key, 1)">
+					<div><div class="gg_icon">()</div>{{key}}</div>
+					<div class="gg_details">: reducer</div>
+					<div class="gg_hover">
 						<div>
 							<div>body:<span>{{Object.keys(reducer.body).join(', ')}}</span></div>
 						</div>
@@ -44,10 +44,10 @@
 			</div>
 			<!--========== LINKS ==========-->
 			<div v-for="link, key in collection.links">
-				<div class="node link" :class="{active:node[key]}" @click="node[key] ? $delete(node, key) : $set(node, key, {})">
-					<div><b>{{link.isOneResult ? '>' : '[]'}}</b>{{key}}</div>
-					<div class="details">: {{link.collection}}</div>
-					<div class="hover">
+				<div class="gg_node gg_link" :class="{gg_active:node[key]}" @click="node[key] ? $delete(node, key) : $set(node, key, {})">
+					<div><div class="gg_icon">{{link.isOneResult ? '>' : '[]'}}</div>{{key}}</div>
+					<div class="gg_details">: {{link.collection}}</div>
+					<div class="gg_hover">
 						<div>
 							<div>collection: <span>{{link.collection}}</span></div>
 							<div v-if="link.inversedBy">inversedBy: <span>{{link.inversedBy}}</span></div>
@@ -166,10 +166,8 @@
 	}
 </script>
 
-<style scoped lang="stylus">
-	*
-		display flex
-		user-select none
+<style lang="stylus">
++prefix-classes('gg_')
 	.editor
 		flex-direction column
 	.node
@@ -179,23 +177,23 @@
 		cursor pointer
 		border 1px solid #ccc
 		flex-wrap nowrap
-		flex-basis fill
 		align-items flex-start
 		position relative
+		background white
 		&.link, &.object
-			b
+			.icon
 				background #a0a
 			&.active
 				flex-direction column
-		&.field b
+		&.field .icon
 			background #08f
-		&.reducer b
+		&.reducer .icon
 			background #f80
-		&.special b
+		&.special .icon
 			background #0a0
 		&.disabled
 			cursor default
-			b
+			.icon
 				background #888			
 		&.active
 			background #333
@@ -209,10 +207,12 @@
 		.details
 			opacity 0.7
 			white-space nowrap
-			align-self flex-end
-		b
+		.icon
 			font-family monospace
+			font-weight bold
+			font-size 14px
 			width 18px
+			height 18px
 			align-items center
 			justify-content center
 			color white

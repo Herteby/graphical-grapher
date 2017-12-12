@@ -1,20 +1,20 @@
 <template>
-	<div class="graphicalGrapher" v-if="collections">
+	<div class="gg_main" v-if="collections">
 		<h1>Graphical Grapher</h1>
-		<div class="collections">
+		<div class="gg_collections">
 			<div v-for="collection, name in collections" 
 			@click="currentCollection = name" 
-			:class="{active:currentCollection == name, noStuff:collection.noStuff}">
+			:class="{gg_active:currentCollection == name, gg_noStuff:collection.noStuff}">
 				{{name}}
 			</div>
 		</div>
-		<div class="options">
+		<div class="gg_options">
 			<label v-if="dev"><input type="checkbox" v-model="bypassFirewall">Bypass firewall<span> (not available in production)</span></label>
 			<label><input type="checkbox" v-model="single">Single result</label>
 			<label><input type="checkbox" v-model="includeCreate_">Add "Collection.createQuery"</label>
 			<label><input type="checkbox" v-model="showLessUsed">Show less used fields</label>
 			</div>
-		<div v-if="currentCollection" class="columns">
+		<div v-if="currentCollection" class="gg_columns">
 			<div>
 				<h2>Editor</h2>
 				<Editor
@@ -27,12 +27,12 @@
 			</div>			
 			<div>
 				<h2>Query</h2>
-				<textarea readonly v-model="jsonQuery" :class="{query:1,badQuery}" @click="$event.target.select()"></textarea>
+				<textarea readonly v-model="jsonQuery" class="gg_query" @click="$event.target.select()"></textarea>
 			</div>
 			<div>
 				<h2>Result <span v-if="result.data">{{result.data.length}} documents - {{result.timeElapsedMs}}ms</span></h2>
 				<div v-if="result.error" style="color:red">{{result.message}}</div>
-				<div v-else class="result">{{jsonResult}}</div>
+				<div v-else class="gg_result">{{jsonResult}}</div>
 			</div>
 		</div>
 		<h1 v-else style="color:#888">Choose a collection</h1>
@@ -134,8 +134,9 @@
 	}
 </script>
 
-<style scoped lang="stylus">
-	.graphicalGrapher
+<style lang="stylus">
++prefix-classes('gg_')
+	.main
 		font-family sans-serif
 		flex-direction column
 		*
@@ -200,6 +201,5 @@
 		outline none
 		resize none
 		tab-size 2
-		&.badQuery
-			color red
+		background none
 </style>
