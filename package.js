@@ -1,6 +1,6 @@
 Package.describe({
   name: 'herteby:graphical-grapher',
-  version: '1.3.5',
+  version: '1.3.6',
   summary: 'Graphical Grapher - Visualize your queries in the browser',
   git: 'https://github.com/Herteby/graphical-grapher',
   documentation: 'README.md'
@@ -17,8 +17,8 @@ Package.onUse(function(api) {
   api.use('tmeasday:check-npm-versions@0.3.1')
   api.use('cultofcoders:grapher@1.3.0')
 
-  api.mainModule('main.client.js', 'client')
-  api.mainModule('main.server.js', 'server')
+  api.mainModule('main.client.js', 'client', {lazy: true})
+  api.mainModule('main.server.js', 'server', {lazy: true})
 })
 
 Package.onTest(function(api) {
