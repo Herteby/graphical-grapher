@@ -180,11 +180,8 @@
 		align-items flex-start
 		position relative
 		background white
-		&.link, &.object
-			.icon
-				background #a0a
-			&.active
-				flex-direction column
+		&.link .icon
+			background #a0a
 		&.field .icon
 			background #08f
 		&.reducer .icon
