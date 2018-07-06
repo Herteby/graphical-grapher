@@ -1,6 +1,8 @@
 # Graphical Grapher
 Get an overview of all your Grapher links and Collection2 schemas, and create queries just by clicking (with live results)
 
+[Demo](https://github.com/Herteby/graphical-grapher-demo)
+
 ![screenshot](https://raw.githubusercontent.com/Herteby/graphical-grapher/master/screenshot.png)
 
 ## Installation
