@@ -16,7 +16,7 @@ meteor add herteby:graphical-grapher
 import {initialize} from 'meteor/herteby:graphical-grapher'
 initialize() //exposes the methods "grapher.live" and "grapher.live_docs"
 ```
-Note: although the "Bypass firewall" feature only works in development, you may want to skip initializing it in production, just to be safe.
+Note: although the "Bypass firewall" feature only works in development, you may want to skip initializing it in production, just so that potential attackers don't get to see your DB schema.
 
 ### Vue
 ```javascript
